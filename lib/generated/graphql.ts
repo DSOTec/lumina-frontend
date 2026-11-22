@@ -730,6 +730,15 @@ export type AccountOperationsQueryVariables = Exact<{
 
 export type AccountOperationsQuery = { operations: { items: Array<{ id: string, type: OperationType, createdAt: string, transactionHash: string, sourceAccount: string, from: string | null, to: string | null, amount: string | null, asset: string | null, startingBalance: string | null, funder: string | null, offerId: string | null, price: string | null, selling: string | null, buying: string | null }>, pageInfo: { hasNextPage: boolean, cursor: string | null } } };
 
+export type AccountTradesQueryVariables = Exact<{
+  address: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  network?: InputMaybe<Network>;
+}>;
+
+export type AccountTradesQuery = { trades: { items: Array<{ id: string, pagingToken: string, ledgerCloseTime: string, tradeType: string, baseAccount: string, baseAmount: string, baseAssetType: string, baseAssetCode: string | null, baseAssetIssuer: string | null, baseOfferId: string | null, counterAccount: string | null, counterAmount: string, counterAssetType: string, counterAssetCode: string | null, counterAssetIssuer: string | null, counterOfferId: string | null, baseIsSeller: boolean | null, price: string | null }>, pageInfo: { hasNextPage: boolean, cursor: string | null } } };
+
 export type LiveFeedTransactionsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -1042,6 +1051,36 @@ export const AccountOperationsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AccountOperationsQuery, AccountOperationsQueryVariables>;
+export const AccountTradesDocument = new TypedDocumentString(`
+    query AccountTrades($address: String!, $limit: Int, $cursor: String, $network: Network) {
+  trades(account: $address, limit: $limit, cursor: $cursor, network: $network) {
+    items {
+      id
+      pagingToken
+      ledgerCloseTime
+      tradeType
+      baseAccount
+      baseAmount
+      baseAssetType
+      baseAssetCode
+      baseAssetIssuer
+      baseOfferId
+      counterAccount
+      counterAmount
+      counterAssetType
+      counterAssetCode
+      counterAssetIssuer
+      counterOfferId
+      baseIsSeller
+      price
+    }
+    pageInfo {
+      hasNextPage
+      cursor
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AccountTradesQuery, AccountTradesQueryVariables>;
 export const LiveFeedTransactionsDocument = new TypedDocumentString(`
     query LiveFeedTransactions($limit: Int) {
   transactions(limit: $limit) {
@@ -1226,6 +1265,36 @@ export const AssetVolumeDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<AssetVolumeQuery, AssetVolumeQueryVariables>;
 
+export type AccountBalanceHistoryQueryVariables = Exact<{
+  address: Scalars['String']['input'];
+  asset?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+  network?: InputMaybe<Network>;
+}>;
+
+
+export type AccountBalanceHistoryQuery = { accountBalanceHistory: { from: string, to: string, snapshots: Array<{ timestamp: string, balance: string }> } };
+
+export const AccountBalanceHistoryDocument = new TypedDocumentString(`
+    query AccountBalanceHistory($address: String!, $asset: String, $from: String, $to: String, $network: Network) {
+  accountBalanceHistory(
+    address: $address
+    asset: $asset
+    from: $from
+    to: $to
+    network: $network
+  ) {
+    from
+    to
+    snapshots {
+      timestamp
+      balance
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AccountBalanceHistoryQuery, AccountBalanceHistoryQueryVariables>;
+
 export type AccountTrustlineOpsQueryVariables = Exact<{
   address: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1253,6 +1322,32 @@ export const AccountTrustlineOpsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AccountTrustlineOpsQuery, AccountTrustlineOpsQueryVariables>;
+
+export type LedgersListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  network?: InputMaybe<Network>;
+}>;
+
+
+export type LedgersListQuery = { ledgers: { items: Array<{ sequence: number, closedAt: string, transactionCount: number, operationCount: number }>, pageInfo: { hasNextPage: boolean, cursor: string | null } } };
+
+export const LedgersListDocument = new TypedDocumentString(`
+    query LedgersList($limit: Int, $cursor: String, $network: Network) {
+  ledgers(limit: $limit, cursor: $cursor, network: $network) {
+    items {
+      sequence
+      closedAt
+      transactionCount
+      operationCount
+    }
+    pageInfo {
+      hasNextPage
+      cursor
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<LedgersListQuery, LedgersListQueryVariables>;
 
 // ── AccountsList (#369) ──────────────────────────────────────────────────────
 
