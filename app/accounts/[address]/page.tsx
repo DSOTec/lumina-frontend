@@ -277,7 +277,10 @@ export default async function AccountPage({
           </div>
 
           {account.balances.length > 0 && (
-            <AccountPortfolio balances={account.balances} />
+            <AccountPortfolio
+              address={account.address}
+              balances={account.balances}
+            />
           )}
 
           <AccountActivityFeed address={account.address} />
